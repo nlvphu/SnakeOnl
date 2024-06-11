@@ -1,4 +1,4 @@
-module github.com/SnakeOnl
+module github.com/nlvphu/SnakeOnl
 
 go 1.22.2
 
