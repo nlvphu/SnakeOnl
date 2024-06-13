@@ -62,9 +62,13 @@ func handleMessages(player *Player) {
 	for {
 		_, msg, err := player.Conn.ReadMessage()
 		if err != nil {
-			fmt.Println(err)
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				fmt.Printf("Read error: %v\n", err)
+			}
 			break
 		}
+
+		fmt.Printf("Received: %s from player %s\n", string(msg), player.ID)
 
 		state.Mutex.Lock()
 		if snake, ok := state.Snakes[player.ID]; ok {
@@ -78,7 +82,11 @@ func broadcastGameState() {
 	for {
 		state.Mutex.Lock()
 		for _, player := range players {
-			player.Conn.WriteJSON(state.Snakes)
+			if err := player.Conn.WriteJSON(state.Snakes); err != nil {
+				fmt.Printf("Write error: %v\n", err)
+				player.Conn.Close()
+				delete(players, player.ID)
+			}
 		}
 		state.Mutex.Unlock()
 		time.Sleep(500 * time.Millisecond)
