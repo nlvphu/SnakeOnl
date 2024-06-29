@@ -26,7 +26,7 @@ These instructions will help you get a copy of the project up and running on you
 - Node.js 14.x or later
 - Docker (optional, for containerized setup)
 
-### Installation
+## Installation
 
 1. Clone the repository:
 
@@ -43,7 +43,7 @@ go mod download
 cd ../client
 npm install
 
-### Usage
+## Usage
 
 1. Start the server:
 
@@ -57,7 +57,7 @@ npm start
 
 3. Open your browser and navigate to http://localhost:3000 to play the game.
 
-### Docker
+## Docker
 
 To run the application using Docker:
 
@@ -73,5 +73,5 @@ docker run -p 3000:3000 snakeonl
 Navigate to http://localhost:3000 in your browser to access the application.
 
 
-### License
+## License
 
