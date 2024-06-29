@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 )
 
@@ -32,7 +33,7 @@ func HandleConnections(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	playerID := r.URL.Query().Get("id")
+	playerID := uuid.NewString()
 	player := &Player{ID: playerID, Conn: conn}
 	playersMutex.Lock()
 	players[playerID] = player
@@ -52,18 +53,28 @@ func HandleConnections(w http.ResponseWriter, r *http.Request) {
 		state.Mutex.Lock()
 		delete(state.Snakes, playerID)
 		state.Mutex.Unlock()
-		conn.Close()
+		// err := conn.Close()
+		// if err != nil {
+		// 	fmt.Println("Connection close error:", err)
+		// }
 	}()
 }
 
 func handleMessages(player *Player) {
-	defer player.Conn.Close()
+	defer func() {
+		err := player.Conn.Close()
+		if err != nil {
+			fmt.Println("Player connection close error:", err)
+		}
+	}()
 
 	for {
 		_, msg, err := player.Conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				fmt.Printf("Read error: %v\n", err)
+			} else {
+				fmt.Printf("Connection closed: %v\n", err)
 			}
 			break
 		}
@@ -89,11 +100,12 @@ func broadcastGameState() {
 			}
 		}
 		state.Mutex.Unlock()
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(100 * time.Millisecond)
 	}
 }
 
 func init() {
+	fmt.Print("Start to update and broadcast")
 	go UpdateGameState()
 	go broadcastGameState()
 }

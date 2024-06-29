@@ -8,21 +8,21 @@ export default class GameScene extends Phaser.Scene {
     }
   
     preload() {
-      this.load.image("food","public/images/apple.png");
-      this.load.image("snakeRight","public/images/head_right.png");
-      this.load.image("snakeLeft","public/images/head_left.png");
-      this.load.image("snakeUp","public/images/head_up.png");
-      this.load.image("snakeDown","public/images/head_down.png");
-      this.load.image("bodyHorizontal","public/images/imbody_horizontal.png");
-      this.load.image("bodyVertical","public/images/body_vertical.png");
-      this.load.image("bodyRightUp","public/images/body_rightup.png");
-      this.load.image("bodyRightDown","public/images/body_rightdown.png");
-      this.load.image("bodyDownRight","public/images/body_downright.png");
-      this.load.image("bodyUpRight","public/images/body_upright.png");
-      this.load.image("tailRight","public/images/tail_right.png");
-      this.load.image("tailLeft","public/images/tail_left.png");
-      this.load.image("tailUp","public/images/tail_up.png");
-      this.load.image("tailDown","public/images/tail_down.png");
+      this.load.image("food","assets/apple.png");
+      this.load.image("snakeRight","assets/head_right.png");
+      this.load.image("snakeLeft","assets/head_left.png");
+      this.load.image("snakeUp","assets/head_up.png");
+      this.load.image("snakeDown","assets/head_down.png");
+      this.load.image("bodyHorizontal","assets/body_horizontal.png");
+      this.load.image("bodyVertical","assets/body_vertical.png");
+      this.load.image("bodyTopLeft","assets/body_topleft.png");
+      this.load.image("bodyTopRight","assets/body_topright.png");
+      this.load.image("bodyBottomLeft","assets/body_bottomleft.png");
+      this.load.image("bodyBottomRight","assets/body_bottomright.png");
+      this.load.image("tailRight","assets/tail_right.png");
+      this.load.image("tailLeft","assets/tail_left.png");
+      this.load.image("tailUp","assets/tail_up.png");
+      this.load.image("tailDown","assets/tail_down.png");
       //this.load.image("background","assets/images/bg.png");
     }
   
@@ -37,9 +37,9 @@ export default class GameScene extends Phaser.Scene {
 
       // Handle incoming messages
       this.socket.onmessage = (event) => {
+        console.log("On ONNNNNNNN message");
         const gameState = JSON.parse(event.data);
         this.updateGameState(gameState);
-        console.log("Im right here");
       };
 
       // Handle connection close event
@@ -75,8 +75,8 @@ export default class GameScene extends Phaser.Scene {
           snake.graphics = this.add.graphics();
         }
         snake.graphics.clear();
-        snake.graphics.fillStyle(0x00ff00, 1.0);
         snake.body.forEach(segment => {
+          snake.graphics.fillStyle(0x00ff00, 1.0);
           snake.graphics.fillRect(segment.X * 10, segment.Y * 10, 10, 10);
         });
       }
